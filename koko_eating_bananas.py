@@ -1,33 +1,30 @@
 class Solution:
-    def minEatingSpeed(self, piles, h):
-        left = 1
-        right = max(piles)
-        min = None
-        min =  self.recursive_search(left, right, piles, h, max(piles))
-        return min
+    def minEatingSpeed(self, piles, target_hours):
+        slowest_speed = 1
+        fastest_speed = max(piles)
+        return self.recursive_search(slowest_speed, fastest_speed, piles, target_hours, fastest_speed)
     
-    def recursive_search(self, left, right, piles, h, result):
-        if left > right:
+    def recursive_search(self, slowest_speed, fastest_speed, piles, target_hours, result):
+        if slowest_speed > fastest_speed:
             return result 
     
-        mid = (left + right)//2
-        iterations = self.get_iterations(piles, mid)
-        if iterations <= h:
-            result = mid
-            return self.recursive_search(left, mid-1, piles, h, mid)
-        elif iterations > h:
-            return self.recursive_search(mid + 1, right, piles, h, result)
-        
-            
-    def get_iterations(self, piles, k):
-        iterations = 0
+        speed_to_be_searched = (slowest_speed + fastest_speed)//2
+        hours = self.get_hours_for_given_speed(piles, speed_to_be_searched)
+        if hours <= target_hours:
+            result = speed_to_be_searched
+            return self.recursive_search(slowest_speed, speed_to_be_searched-1, piles, target_hours, speed_to_be_searched)
+        elif hours > target_hours:
+            return self.recursive_search(speed_to_be_searched + 1, fastest_speed, piles, target_hours, result)
+
+    def get_hours_for_given_speed(self, piles, given_speed):
+        hours = 0
         for element in piles:
-            hours  = element//k
-            if element % k != 0:
-                hours +=1 
+            temp_hours  = element//given_speed
+            if element % given_speed != 0:
+                temp_hours +=1 
             
-            iterations += hours
-        return iterations
+            hours += temp_hours
+        return hours
 
 s = Solution()
 print(s.minEatingSpeed([4, 10, 23, 25], 4))
