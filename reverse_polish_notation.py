@@ -1,29 +1,26 @@
 class Solution:
-    
-    def __init__(self, *args, **kwargs):
-        self.stack = []
-        self.operators = ("+", "-", "*", "/")
-        super().__init__(*args, **kwargs)
-    
-    def evaluate(self, operator_1, operator_2, operator):
-        if operator == "+":
-            return operator_1 + operator_2
-        elif operator == "-":
-            return operator_1 - operator_2
-        elif operator == "*":
-            return operator_1 * operator_2
-        elif operator == "/":
-            return int(operator_1/operator_2)
-
-    
-    def evalRPN(self, tokens):
-        for token in tokens:
-            if token not in self.operators:
-                self.stack.append(token)
+    def evalRPN(self, tokens: List[str]) -> int:
+        operators = ["*", "-", "+", "/"]
+        stack = []
+        for item in tokens:
+            if item not in operators:
+                stack.append(int(item))
             else:
-                operator_2 = int(self.stack.pop())
-                operator_1 = int(self.stack.pop())
-                result = self.evaluate(operator_1, operator_2, token)
-                self.stack.append(result)
+                operand_1 = stack.pop()
+                operand_2 = stack.pop()
+                result=None
+                match item:
+                    case "+":
+                        result = operand_1 + operand_2
+                    case "*":
+                        result = operand_1 * operand_2
+                    case "-":
+                        result = operand_2 - operand_1
+                    case "/":
+                        result = int(operand_2/operand_1)
 
-        return int(self.stack[0])
+                stack.append(result)
+        
+        return stack[0]
+                
+        
